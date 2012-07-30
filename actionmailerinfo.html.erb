@@ -1,0 +1,131 @@
+# First set up environment both production and development
+# /config/environments/production.rb 
+# and 
+# /config/environments/development.rb
+# Add to end of environments files
+
+# Action Mailer Config
+# Don't care if the mailer can't send
+config.action_mailer.raise_delivery_errors = true
+config.action_mailer.default_url_options = { :host => 'www.cassidycarson.com' }
+config.action_mailer.delivery_method = :smtp
+ActionMailer::Base.smtp_settings = {
+  :address  => "mail.globalresponsemobile.com",
+  :port  => 587,
+  :user_name  => "stephen@globalresponsemobile.com",
+  :password  => "xxxxxxxxxxxxxxxxxx",
+  :authentication  => :login,
+  :openssl_verify_mode => 'none',
+  :enable_starttls_auto => true
+}
+config.action_mailer.perform_deliveries = true
+
+#Generate Model and Migration
+rail g model Contact first_name:string last_name:string phone:string email:string comment:string
+
+#/db/migrate/11111_contacts.rb
+class Contacts < ActiveRecord::Migration
+  def up
+    create_table :contacts do |t|
+      t.string :first_name
+      t.string :last_name
+      t.string :phone
+      t.string :email
+      t.text :comment
+
+      t.timestamps  
+    end
+  end
+  
+  def down
+    drop_table :contacts 
+  end
+end
+
+#/app/models/contact.rb
+class Contact < ActiveRecord::Base
+  validates :first_name, :presence => true, :length => { :minimum => 4 }
+  validates :last_name, :presence => true, :length => { :minimum => 4 }
+  validates :email, :presence => true
+  after_create :email_contact
+private
+  def email_contact
+    ContactMailer.email_contact(self).deliver
+  end
+end
+
+#Generate Mailer
+rails g mailer ContactMailer
+
+# /app/mailers/contacts_mailer.rb
+class ContactMailer < ActionMailer::Base
+  def email_contact(contact)
+    @contact = contact
+    mail(
+      :from => 'stephen@globalresponsemobile.com',
+      :to => "info@thehorseadjutant.com",
+      :reply_to => @contact.email,
+      :subject => "New Lead: " + @contact.first_name + ' ' + @contact.last_name + ' ' + @contact.phone
+    )
+  end
+end
+# Set up the Email Template
+# /app/views/contact_mailer/email_contact.html.haml
+Global Response Mobile Lead
+First Name:
+= @contact.first_name
+Last Name:
+= @contact.last_name
+Phone:
+= @contact.phone
+Email:
+= @contact.email
+Comment:
+= @contact.comment
+
+# Create Contacts Controller
+# /app/controllers/contacts_controller.rb
+class ContactsController < ApplicationController
+  expose(:contact)
+  def create
+    if contact.save
+      flash[:notice] = 'Contact was successfully created.'
+      redirect_to contact_us_path
+    else
+      render "new"
+    end
+  end
+end
+
+#setup the contact form view
+# /app/views/contacts/new.html.haml
+<%= form_for(contact) do |f| %>
+  <% if contact.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(contact.errors.count, "error") %> prohibited this contact from being saved:</h2>
+
+      <ul>
+      <% contact.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :name %><br />
+    <%= f.text_field :name %>
+  </div>
+  <div class="field">
+    <%= f.label :email %><br />
+    <%= f.text_field :email %>
+  </div>
+  <div class="field">
+    <%= f.label :comment %><br />
+    <%= f.text_area :comment %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>
+

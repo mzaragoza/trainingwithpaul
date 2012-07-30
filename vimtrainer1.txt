@@ -1,0 +1,39 @@
+Welcome to VIM trainer ver. 1.0
+
+This exercise expects you to know very basic VIM. If you need help just press esc / help
+
+To begin type ---->  esc  /start   <--- this will take you to the center of the document. Only type the expression
+Once you go to the center just follow the numbers. You only need to type the letter after the number. Combinations are meant to be handled one at a time. We start out learning basic navigation. Use the cursor as a target and move it to the number before the next exercise. Repeated keystrokes may be nessasary. You must type the 'esc' before the command.
+there are a few commands you need to know... just learn them. esc brings you back to the beginning. : bring the sursor to the bottom for a command  :w writes the file. :wq writes and quits the file.  :q! quits the file in the event of getting dorked up.
+===>> learn VIM is a challenge but the smoothness of working in this environment continues to be the perfect way to handle trouble free coding. I have seen many interfaces and working with the mouse as it seems will be easier is actually choppy and slow. Take the time to learn VIM and the rewards will be the joy of trouble free coding. Stephen Shooster 2012 remember artists sign thier work.
+
+exercise 1 - navigation getting there is 1/2 the problem
+a)
+b)
+c)
+d)
+e)
+f)                                          1k
+h)60				4h      start here     3kl
+i)					    2j
+j)
+k)
+l)
+m)
+7G (this will take you to the bottom of the file. To go back type 0 (zero)
+
+
+working betwit and between screens
+cntrl tab  - opens a window
+cmd (apple key) and arrows right or left   - take you between tabs.
+cmd d - creates a split window (vertically)
+cmd - option - arrow       - to move between split windows
+cmd n     creates a new window and session.
+cmd w     closes current window
+
+special commands requiring gems or plugins -
+Graphical Directory view  1. type vim enter  2. type :NERDTree 
+to navigate between nerdtree and window press esc w or esc ww
+
+
+  7G

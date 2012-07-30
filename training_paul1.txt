@@ -1,0 +1,46 @@
+REST:
+
+URL: /contacts
+HTTP_REQUEST[:headers] =
+HTTP_REQUEST[:headers][:post_vars] = 'contact[name]=paul&contact[phone]=5551122222&contact[email]=moo@123.com&contact[message]=this is my message'
+HTTP_REQUEST[:headers][:method] = 'post'
+HTTP_REQUEST[:headers][:cookie] = 'alskdjflasjf'
+HTTP_REQUEST[:headers][:request_type] = 'html'
+HTTP_REQUEST[:content] = ''
+
+/contacts get contacts#index html
+/contacts.json get contacts#index json
+/contacts.xml get contacts#index xml
+
+/contacts/new get contacts#new
+/contacts post contacts#create
+/contacts/1?_method=put post contacts#update
+/contacts/1/edit get contacts#edit
+/contacts/1 delete contacts#destroy
+
+Rails converts to
+params[:contact] = {:name => '', :phone => '', :email => '', :comment => ''}
+
+1.8
+{:name => '', :phone => '', :email => '', :comment => ''}
+1.9
+{name: '', phone: '', email: '', comment: ''}
+json
+{name: '', phone: '', email: '', comment: ''}
+
+class FormHelper
+  code here.....
+
+  def initializer(object,arguments)
+    @object = object
+    @arguments = arguments
+  end
+  def text_field(name,arguments)
+    puts @object.__send(name,arguments) if @object.responds_to? name
+  end
+end
+
+def form_for(object, arguments)
+  form_helper =  FormHelper.new(object, arguments)
+  puts form_helper.show_form
+end
